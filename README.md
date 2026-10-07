@@ -14,11 +14,11 @@ npm run dev
 
 Open http://127.0.0.1:5174. On Windows use npm.cmd if PowerShell blocks npm. Member frontend stays on 5173; admin preview uses 4174. Both dev and preview proxy /api to the backend.
 
-Set ADMIN_EMAILS=admin@example.com in the backend environment and restart it. Sign in with that existing account. No public admin signup is offered. Add the admin origin to backend APP_ORIGINS and Google OAuth authorized JavaScript origins. Every admin API request checks authorization on the server.
+Only biasharandogoassociation@gmail.com can access administration, using email and password. Provision this account on the backend with npm run create:admin (optionally set ADMIN_INITIAL_PASSWORD). Generated credentials are saved to the git-ignored .env.admin-credentials.json. Existing accounts are not overwritten. Public signup cannot claim this address. Add the admin origin to backend APP_ORIGINS. Every admin API request checks both the email and password authentication method; Google sessions cannot access administration.
 
 ## Deploy separately
 
-npm run build creates dist. Deploy as its own site. For Netlify, set API_UPSTREAM to the shared backend HTTPS origin and use the included netlify.toml. The API proxy must precede the SPA fallback. Add the deployed admin origin to backend APP_ORIGINS and Google OAuth authorized origins. API requests and session cookies use the admin site's same-origin /api proxy. Backend secrets stay on the backend.
+npm run build creates dist. Deploy as its own site. For Netlify, set API_UPSTREAM to the shared backend HTTPS origin and use the included netlify.toml. The API proxy must precede the SPA fallback. Add the deployed admin origin to backend APP_ORIGINS . API requests and session cookies use the admin site's same-origin /api proxy. Backend secrets stay on the backend.
 
 Password reset emails use the backend's shared PASSWORD_RESET_ORIGIN; the updated password also works in the admin app.
 
@@ -38,3 +38,7 @@ Use the filters above the totals to combine business type (registered sector), c
 
 The Analytics page includes business-type distribution and a business-type-by-county table showing members, active memberships and confirmed registration collections. Empty selections show zero totals and an explicit no-results message. CSV includes sector, county, constituency and ward for the matching members.
 # admin-dashboard
+
+## Authentication tests
+
+Run `npm test` to check the frontend auth service and protected route loader: password request handling and the absence of Google sign-in, rejected credentials, malformed responses, anonymous session redirects, and administrator access checks. These tests mock network responses and load the actual TypeScript services and routes; they do not drive a browser or perform a real Google OAuth exchange. The backend's `server/dashboard-auth.test.mjs` exercises real password hashing, session cookies, member registration, admin permissions, assisted registration, payment recording, activation, logout and expiry in an isolated database.

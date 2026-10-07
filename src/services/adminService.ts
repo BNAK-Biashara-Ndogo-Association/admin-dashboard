@@ -9,6 +9,7 @@ export async function adminRequest<T>(path: string, body?: object): Promise<T> {
 export const adminService = {
   members: (sort = 'updated') => adminRequest<{ members: AdminMember[]; packages: MembershipPackage[] }>(`members?sort=${encodeURIComponent(sort)}`),
   config: () => adminRequest<MembershipConfig>('registration-config'),
+  document: (id: string, side: 'front' | 'back') => adminRequest<{ document: { name: string; mimeType: string; data: string } }>(`members/${encodeURIComponent(id)}/documents/${side}`),
   add: (body: Record<string, unknown>) => adminRequest<{ member: AdminMember }>('members', body),
   manage: (id: string, action: string, details?: object) => adminRequest(`members/${encodeURIComponent(id)}`, { ...details, action }),
 };
