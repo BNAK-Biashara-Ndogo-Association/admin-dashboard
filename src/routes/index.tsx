@@ -17,7 +17,7 @@ export const router = createBrowserRouter([
     if (!user) return redirect(`/login?returnTo=${encodeURIComponent(new URL(request.url).pathname)}`);
     try { await adminRequest('access'); } catch (cause) { throw new Response(cause instanceof Error ? cause.message : 'Admin access unavailable.', { status: 403 }); }
     return null;
-  }, shouldRevalidate: () => true, element: <AdminDashboard />, errorElement: <AdminAccessError />, children: [{ index: true }, { path: 'members' }, { path: 'analytics' }, { path: 'email' }] },
+  }, shouldRevalidate: () => true, element: <AdminDashboard />, errorElement: <AdminAccessError />, children: [{ index: true }, { path: 'members' }, { path: 'analytics' }, { path: 'email' }, { path: 'events' }] },
 
   { path: '/login', element: <LoginPage key="login" /> },
   { path: '/forgot-password', element: <LoginPage key="forgot" mode="forgot" /> },
