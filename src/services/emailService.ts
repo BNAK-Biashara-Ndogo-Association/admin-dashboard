@@ -1,9 +1,11 @@
+import { apiFetch } from './api';
+
 export interface EmailDelivery { id: string; kind: 'event' | 'certificate'; subject: string; recipientCount: number; status: 'accepted' | 'pending' | 'failed'; providerId: string; createdAt: string; }
 export interface EmailConfig { ready: boolean; maxEventRecipients: number; }
 
 async function request<T>(path: string, body?: object, key?: string): Promise<T> {
-  const response = await fetch(`/api/admin/email/${path}`, {
-    credentials: 'same-origin', signal: AbortSignal.timeout(30000),
+  const response = await apiFetch(`/api/admin/email/${path}`, {
+    signal: AbortSignal.timeout(30000),
     ...(body ? { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key || '' }, body: JSON.stringify(body) } : {}),
   });
   const data = await response.json();
